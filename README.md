@@ -2,6 +2,22 @@
 
 > Hierarchically reconciled energy demand forecasts evaluated on pinball loss, so regional forecasts sum to national and the tail is right.
 
+## Live deployment
+
+[![CI and deployment](https://github.com/SlateGitOrg/hierforecast/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SlateGitOrg/hierforecast/actions/workflows/ci.yml)
+
+[Open the interactive HierForecast demo](https://slategitorg.github.io/hierforecast/)
+
+The deployed interface uses a deterministic offline scenario to make the repository's tested decision rule visible without external services or private data.
+
+### Desktop
+
+![HierForecast desktop deployment](docs/assets/deployed-desktop.png)
+
+### Mobile
+
+<img src="docs/assets/deployed-mobile.png" alt="HierForecast mobile deployment" width="390">
+
 > **Implementation note.** The runnable core is Python standard library only.
 > numpy/statsmodels/LightGBM/hierarchicalforecast are replaced by hand-written
 > linear algebra (Gaussian elimination, Cholesky), an OLS weather-and-calendar
