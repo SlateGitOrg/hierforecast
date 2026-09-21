@@ -1,1 +1,36 @@
-<!doctype html><html lang="en" class="signal-lab"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Forecast every region while keeping the national total honest."><meta name="theme-color" content="#edf3f8"><title>HierForecast — Live demo</title><link rel="stylesheet" href="./styles.css"></head><body><div class="shell"><nav class="topbar" aria-label="Primary"><a class="brand" href="./"><span class="brand-mark">S</span>HierForecast</a><a class="repo-link" href="https://github.com/SlateGitOrg/hierforecast">View source on GitHub</a></nav><main><header class="hero"><div><p class="kicker">Energy demand planning</p><h1>Forecast every region while keeping the national total honest.</h1></div><div class="hero-side"><p>This interactive browser scenario makes the repository's tested decision rule visible. Adjust the operating condition and inspect what changes.</p><div class="status" role="status"><span class="status-dot" aria-hidden="true"></span>Reconciled</div></div></header><section class="visual" aria-label="Interactive project view"><div class="plot-wrap"><svg class="plot" viewBox="0 0 640 300" role="img" aria-labelledby="plot-title"><title id="plot-title">National, Regional sum, Upper bound comparison over time</title><g class="grid-lines"><path d="M40 40H610M40 105H610M40 170H610M40 235H610"/></g><path class="series ghost" d="M40 220 C120 190 160 196 230 156 S360 130 425 112 S525 92 610 70"/><path class="series live" d="M40 220 C112 205 168 174 230 165 S350 108 425 118 S520 62 610 52"/><path class="decision" d="M350 34V252"/><circle class="pulse-point" cx="425" cy="118" r="7"/><g class="axis-copy"><text x="40" y="278">Baseline</text><text x="545" y="278">Today</text></g></svg><div class="legend"><span><i class="swatch live-swatch"></i>National</span><span><i class="swatch ghost-swatch"></i>Regional sum</span></div></div></section><aside class="panel"><div class="metric"><strong id="primary-metric" aria-live="polite">41.6 GW</strong><span>tomorrow&#39;s peak</span></div><div class="control"><label for="scenario-range"><span>Confidence level</span><output id="scenario-output" for="scenario-range">90%</output></label><input id="scenario-range" type="range" min="50" max="99" value="90" aria-label="Confidence level"></div><div class="facts"><div class="fact"><strong>3.2%</strong><span>pinball loss</span></div><div class="fact"><strong>0.0 MW</strong><span>reconciliation gap</span></div><div class="fact"><strong>18</strong><span>regions</span></div></div></aside><footer class="demo-note"><p>Representative offline scenario. The repository's native test suite verifies the core behavior; this page visualizes its decision path without external services or private data.</p><a href="https://github.com/SlateGitOrg/hierforecast#readme">Read the engineering case study</a></footer></main></div><script src="./app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Reconcile regional forecasts to a national total and generate capacity intervals.">
+  <title>HierForecast · Working Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#results">Skip to results</a>
+  <header class="masthead"><a class="brand" href="https://github.com/SlateGitOrg/hierforecast">HierForecast</a><span class="build-state"><i></i> live computation</span></header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">Coherent demand planning</p>
+      <h1>Run the decision,<br><em>inspect the evidence.</em></h1>
+      <p class="lede">Reconcile regional forecasts to a national total and generate capacity intervals.</p>
+    </section>
+    <section class="workspace" aria-label="Interactive project workspace">
+      <form id="workspace-form" class="control-panel">
+        <div class="panel-heading"><span>01</span><div><p>Inputs</p><h2>Configure the run</h2></div></div>
+        <div class="fields"><label class="field" for="nationalForecast"><span>National forecast (MW)</span><input id="nationalForecast" name="nationalForecast" type="number" value="42000" min="1" max="1000000" step="any" data-suggested-step="10"></label>
+<label class="field" for="confidence"><span>Confidence level</span><input id="confidence" name="confidence" type="number" value="90" min="50" max="99" step="any" data-suggested-step="1"></label>
+<label class="field" for="regions"><span>Regional forecasts as JSON</span><textarea id="regions" name="regions" rows="8">[{&quot;name&quot;:&quot;North&quot;,&quot;forecast&quot;:10800,&quot;sigma&quot;:420},{&quot;name&quot;:&quot;South&quot;,&quot;forecast&quot;:9600,&quot;sigma&quot;:380},{&quot;name&quot;:&quot;East&quot;,&quot;forecast&quot;:11200,&quot;sigma&quot;:510},{&quot;name&quot;:&quot;West&quot;,&quot;forecast&quot;:9800,&quot;sigma&quot;:440}]</textarea></label></div>
+        <div class="actions"><button class="run" type="submit">Run analysis <span>→</span></button><button id="reset-button" class="reset" type="button">Reset</button></div>
+      </form>
+      <section id="results" class="result-panel" aria-live="polite" aria-busy="true">
+        <div class="panel-heading"><span>02</span><div><p>Output</p><h2>Decision trace</h2></div></div>
+        <div id="result-content" class="result-content"><div class="loading">Computing initial scenario…</div></div>
+      </section>
+    </section>
+  </main>
+  <footer><p>Built from the tested logic in <a href="https://github.com/SlateGitOrg/hierforecast">SlateGitOrg/hierforecast</a>.</p><p>Interactive capstone · Sneha Chandra</p></footer>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
