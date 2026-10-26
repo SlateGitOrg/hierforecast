@@ -1,35 +1,36 @@
 # Architecture
 
-> Fill this in as you build. It is the document you will screen-share in a
-> system-design interview, so write it for that audience.
-
 ## Context
 
-Why this system exists, who uses it, and what they do instead today.
+Utilities forecast demand at several levels of a hierarchy, and independently produced forecasts rarely add up. hierforecast builds base forecasts per node, reconciles them so the hierarchy is coherent, and scores the result on quantile loss because capacity planning depends on the upper tail.
 
 ## Container view
 
-The major runtime pieces and how they talk. Keep the diagram in Mermaid so it
-reviews well in a pull request.
-
 ```mermaid
 flowchart LR
-  A[Source] --> B[Ingest]
-  B --> C[(Store)]
-  C --> D[Service]
-  D --> E[Surface]
+  G["generator"] --> Q["quality gate"]
+  Q --> B["base forecasts"]
+  H["hierarchy (S)"] --> R["reconcilers"]
+  B --> R
+  R --> M["metrics"]
+  M --> E["evaluate / demo"]
 ```
+
+Everything is pure Python (standard library). `linalg.py` supplies Gaussian elimination and Cholesky; `reconcile.py` builds the projection `S (S' W^-1 S)^-1 S' W^-1` for each method.
 
 ## Key decisions
 
-Record each significant choice, the alternatives considered, and the reason —
-one short section each. The differentiator in the README should appear here as
-a decision with its trade-offs spelled out.
+- **MinT with shrinkage** over bottom-up (coherent but noisy) and top-down (coherent but blind to local structure). Shrinkage keeps the residual covariance well conditioned with few observations per node.
+- **Pinball loss** rather than MAE or RMSE, since a model tuned for the mean is confidently wrong in the tail. The demo compares a Gaussian tail with an empirical residual tail to show the difference.
+- **Residual quantiles pushed through the reconciler**, which is exact because reconciliation is linear.
+- **Quality gate first**, so corrupt history stops the run rather than silently degrading forecasts.
 
 ## Failure modes
 
-What breaks, how you detect it, and what the system does instead of lying.
+- Gaps, DST shifts and meter resets raise `DataQualityError`.
+- With short history the estimated covariance is noisy and MinT's gain over bottom-up becomes unreliable.
+- A model that does not beat the seasonal-naive baseline is flagged in the demo output.
 
-## What is out of scope
+## Out of scope
 
-Name it explicitly. Scope discipline reads as seniority.
+Real grid data ingestion, rolling-origin backtesting, a serving API, drift monitoring and trading logic.
